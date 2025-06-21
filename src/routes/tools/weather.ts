@@ -1,6 +1,33 @@
 import { z } from '@hono/zod-openapi'
 import { tool } from 'ai'
 
+// OpenWeatherMap APIレスポンスの型定義
+interface WeatherResponse {
+    name: string
+    sys: {
+        country: string
+        sunrise: number
+        sunset: number
+    }
+    main: {
+        temp: number
+        feels_like: number
+        humidity: number
+        pressure: number
+    }
+    weather: Array<{
+        description: string
+    }>
+    wind: {
+        speed: number
+        deg: number
+    }
+    clouds: {
+        all: number
+    }
+    visibility?: number
+}
+
 export const weatherTool = tool({
     description: '指定された都市の現在の天気情報を取得します',
     parameters: z.object({
@@ -33,7 +60,7 @@ export const weatherTool = tool({
           }
         }
         
-        const data = await response.json();
+        const data = await response.json() as WeatherResponse;
         
         // レスポンスデータを整形
         const weatherData = {

@@ -5,6 +5,7 @@ import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { chatRoute } from './routes/chat'
 import { toolsRoute } from './routes/tools'
+import { AIMCPServer } from './mcp/server.js'
 import 'dotenv/config'
 
 const app = new OpenAPIHono()
@@ -40,15 +41,42 @@ app.get('/', (c) => {
       tools: '/api/tools',
       weather: '/api/weather',
       calculator: '/api/calculator'
+    },
+    mcp: {
+      stdio: 'npm run mcp:stdio',
+      websocket: 'npm run mcp:websocket'
     }
   })
 })
 
 const port = Number(process.env.PORT) || 3000
-console.log(`Server is running on port ${port}`)
-console.log(`Swagger UI: http://localhost:${port}/swagger`)
+const mcpMode = process.env.MCP_MODE
 
-serve({
-  fetch: app.fetch,
-  port
-})
+// 起動モードの選択
+if (mcpMode === 'stdio') {
+  // MCP Stdio モード
+  const mcpServer = new AIMCPServer()
+  await mcpServer.runStdio()
+} else if (mcpMode === 'websocket') {
+  // MCP WebSocket モード
+  const mcpServer = new AIMCPServer()
+  const mcpPort = Number(process.env.MCP_PORT) || 3001
+  await mcpServer.runWebSocket(mcpPort)
+} else {
+  // 通常のHTTP APIサーバーモード
+  console.log(`HTTP API Server is running on port ${port}`)
+  console.log(`Swagger UI: http://localhost:${port}/swagger`)
+  
+  // オプション: WebSocket MCPサーバーも同時起動
+  if (process.env.ENABLE_MCP_WEBSOCKET === 'true') {
+    const mcpServer = new AIMCPServer()
+    const mcpPort = Number(process.env.MCP_PORT) || 3001
+    mcpServer.runWebSocket(mcpPort)
+    console.log(`MCP WebSocket Server is running on port ${mcpPort}`)
+  }
+
+  serve({
+    fetch: app.fetch,
+    port
+  })
+}

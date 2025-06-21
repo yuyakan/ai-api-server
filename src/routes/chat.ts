@@ -1,5 +1,5 @@
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
-import { generateText, tool } from 'ai'
+import { generateText } from 'ai'
 import { openai } from '@ai-sdk/openai'
 import { weatherTool } from './tools/weather'
 import { calculatorTool } from './tools/calculator'

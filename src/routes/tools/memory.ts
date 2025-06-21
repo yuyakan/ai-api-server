@@ -1,6 +1,11 @@
 import { z } from '@hono/zod-openapi'
 import { tool } from 'ai'
 
+// グローバル型定義を追加
+declare global {
+  var memoryStore: Map<string, string> | undefined
+}
+
 export const memoryTool = tool({
     description: 'データを一時的に保存・取得します',
     parameters: z.object({

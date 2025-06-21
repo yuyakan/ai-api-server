@@ -7,7 +7,11 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "type-check": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "mcp:stdio": "MCP_MODE=stdio npx tsx src/index.ts",
+    "mcp:websocket": "MCP_MODE=websocket npx tsx src/index.ts",
+    "mcp:cli": "npx tsx src/mcp/cli.ts",
+    "hybrid": "ENABLE_MCP_WEBSOCKET=true npx tsx src/index.ts"
   },
   "dependencies": {
     "hono": "^4.0.0",
@@ -18,11 +22,14 @@
     "@ai-sdk/openai": "^0.0.24",
     "openai": "^4.0.0",
     "zod": "^3.22.0",
-    "dotenv": "^16.0.0"
+    "dotenv": "^16.0.0",
+    "@modelcontextprotocol/sdk": "^0.5.0",
+    "ws": "^8.14.0"
   },
   "devDependencies": {
     "tsx": "^4.0.0",
     "typescript": "^5.0.0",
-    "@types/node": "^20.0.0"
+    "@types/node": "^20.0.0",
+    "@types/ws": "^8.5.0"
   }
 }
