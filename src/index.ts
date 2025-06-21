@@ -5,8 +5,6 @@ import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { chatRoute } from './routes/chat'
 import { toolsRoute } from './routes/tools'
-import { weatherRoute } from './routes/weather'
-import { calculatorRoute } from './routes/calculator'
 import 'dotenv/config'
 
 const app = new OpenAPIHono()
@@ -31,8 +29,6 @@ app.get('/swagger', swaggerUI({ url: '/doc' }))
 // Routes
 app.route('/api/chat', chatRoute)
 app.route('/api/tools', toolsRoute)
-app.route('/api/weather', weatherRoute)
-app.route('/api/calculator', calculatorRoute)
 
 // Health check
 app.get('/', (c) => {
